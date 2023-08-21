@@ -26,11 +26,10 @@
           };
           devShells.default = pkgs.mkShell {
             packages = with pkgs; [
-              go_1_19
-              olm
-              pre-commit
-              gotools
+              go_1_20
               gopls
+              gotools
+              pre-commit
             ];
           };
         }
