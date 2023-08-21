@@ -1,0 +1,38 @@
+{
+  description = "Sumner's personal homepage";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+  outputs = { self, nixpkgs, flake-utils }:
+    (flake-utils.lib.eachDefaultSystem
+      (system:
+        let
+          pkgs = import nixpkgs { system = system; };
+        in
+        {
+          packages.homepage = pkgs.buildGoModule rec {
+            pname = "homepage";
+            version = "unstable-2023-08-21";
+            src = self;
+
+            subPackages = [ "cmd/homepage" ];
+
+            propagatedBuildInputs = [ pkgs.olm ];
+
+            vendorSha256 = "sha256-fCD9JDAAAAAAAAAAAAAcIjmIjdoKrq/hBaGN2pMXjpU=";
+          };
+          devShells.default = pkgs.mkShell {
+            packages = with pkgs; [
+              go_1_19
+              olm
+              pre-commit
+              gotools
+              gopls
+            ];
+          };
+        }
+      ));
+}
